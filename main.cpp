@@ -4,7 +4,6 @@
  #include <vector>
  #include <iterator>
  #include <fstream>
-
  using namespace std;
 
  struct Node{
@@ -13,36 +12,42 @@
    vector<int> weightlist;
  };
 
- //function prototypes below
+ void addVertex(vector<Node*>* glist);
+ void addEdge(vector<Node*>* glist);
+ int distance(Node* x, Node* y);
+ void removeVertex(vector<Node*>* glist);
+ void removeEdge(vector<Node*>* glist);
+ void printTable(vector<Node*> glist);
+ void dijkstra(vector<Node*> glist, Node* start, Node* stop);
 
  int main() {
 
-   vector<Node*> gList;
+   vector<Node*> glist;
    char* userInput = new char[50];
    bool cont = true;
    while (cont == true) {
-     cout << "Please input one of these commands AV (Add Vertext), AE (Add Edge), RV (Remove Vertex), RE (Remove Edge), SP (Shortest Path) PN (Print) QT (Quit) " << endl;
+     cout << "Please input one of these commands AV (Add Vertext), AE (Add Edge), RV (Remove Vertex), RE (Remove Edge), SP (Shortest Path) PRINT (Print) QUIT (Quit) " << endl;
      cin >> userInput;
      cin.ignore();
-     if (strcmp(input, "AV") == 0) {
-       //vertext function here
+     if (strcmp(userInput, "AV") == 0) {
+       addVertex(&glist);
      }
-     else if (strcmp(input, "AE") == 0) {
-       //edge function here
+     else if (strcmp(userInput, "AE") == 0) {
+       addEdge(&glist);
      }
-     else if (strcmp(input, "RV") == 0) {
-       //vertex function here
+     else if (strcmp(userInput, "RV") == 0) {
+       removeVertex(&glist);
      }
-     else if (strcmp(input, "RE") == 0) {
-       //removing edge function here
+     else if (strcmp(userInput, "RE") == 0) {
+       removeEdge(&glist);
      }
-     else if (strcmp(input, "PN") == 0) {
-       //print function here
+     else if (strcmp(userInput, "PRINT") == 0) {
+       printTable(glist);
      }
-     else if (strcmp(input, "SP") == 0) {
+     else if (strcmp(userInput, "SP") == 0) {
        //write the shortest path stuff here
      }
-     else if (strcmp(input, "QT") == 0) {
+     else if (strcmp(userInput, "QUIT") == 0) {
        cout << "Thanks for using this program!" << endl;
      }
    }
@@ -66,7 +71,7 @@
 
    Node* temp = new Node();
    char* input = new char(50);
-   cout << "Vertext LAbel: " << endl;
+   cout << "Vertext Label: " << endl;
    cin.getline(input, 50, '\n');
    temp->label = input;
    glist->push_back(temp);
@@ -79,7 +84,7 @@
    char* stwo = new char(50);
    bool gone = false;
    bool gtwo = false;
-   int weight = 0l
+   int weight = 0;
    Node* one = NULL;
    Node* two = NULL;
 
@@ -88,13 +93,13 @@
      return;
    }
 
-   vecotr<Node*> :: iterator it;
+   vector<Node*> :: iterator it;
    cout << "Vertex 1: " << endl;
    cin.getline(sone, 50);
    cout << "Vertex 2: " << endl;
    cin.getline(stwo, 50);
    for(it = glist->begin(); it != glist->end(); it++) {
-     if (strcmp((*it)->label, s one) == 0) {
+     if (strcmp((*it)->label, sone) == 0) {
        one = (*it);
        gone = true;
      }
@@ -123,7 +128,7 @@
    cout << "Vertex Label: " << endl;
    cin.getline(input, 50);
    vector<Node*> :: iterator it;
-   for (it = glist-begin(); it != glist->end(); it++) {
+   for (it = glist->begin(); it != glist->end(); it++) {
      if (strcmp((*it)->label, input) == 0) {
        temp = *(it);
      }
@@ -138,7 +143,7 @@
    for (ite = glist->begin(); ite != glist->end(); ite++) {
      n = distance((*ite), temp);
      if (n != -1) {
-       (*ite)->connect.erase((*ite)->connect.begin() = n;
+       (*ite)->connect.erase((*ite)->connect.begin() + n);
        (*ite)->weightlist.erase((*ite)->weightlist.begin() + n);
      }
    }
@@ -152,12 +157,12 @@
      }
  }
 
- void removeEdge(vecotr<Node*>* glist) {
+ void removeEdge(vector<Node*>* glist) {
 
    char * sone = new char(50);
    char* stwo = new char(50);
    Node* one = NULL;
-   Nodee* two = NULL;
+   Node* two = NULL;
    bool gone = false;
    bool gtwo = false;
    int i = 0;
@@ -166,7 +171,7 @@
    cin.getline(sone, 50);
    cout << "Vertex 2: " << endl;
    cin.getline(stwo, 50);
-   for(it = glist->begain(); it != glist->end(); it++) {
+   for(it = glist->begin(); it != glist->end(); it++) {
      if(strcmp((*it)->label, sone) == 0) {
        one = *(it);
        gone = true;
@@ -192,9 +197,9 @@
 
    vector<Node*> :: iterator it;
    vector<Node*> :: iterator i;
-   vector<Node*> :: iteratorj;
+   vector<Node*> :: iterator j;
    int p = 0;
-   cout << "The Adjacency Table: " << end << endl;
+   cout << "The Adjacency Table: " << endl << endl;
    cout << "\t";
    for (it = glist.begin(); it != glist.end(); it++) {
      cout << (*it)->label;
@@ -204,19 +209,24 @@
 
    for(i = glist.begin(); i!=glist.end(); i++) {
      cout << (*it)->label;
-     cout << "\t"l;
+     cout << "\t";
+     for (j = glist.begin(); j != glist.end(); j++) {
+       p = distance((*i),(*j));
+       if (p != -1) {
+         cout << (*i)->weightlist[p];
+         cout << "\t";
+       }
+       else {
+         cout << "*";
+         cout << "\t";
+      }
+    }
+    cout << endl;
    }
-   for (i = glist.begin(); i!= glist.end(); j++) {
-     p = distance((*i),(*j));
-     if (p != -1) {
-       cout << (*i)->weightlist[p];
-       cout << "\t";
-     }
-     else {
-       cout << "8";
-       cout << "\t";
-     }
-   }
-   cout << endl;
-   }
+ }
+
+ void dijkstrea(vector<Node*> glist, Node* start, Node* stop) {
+
+   cout << "Working " << endl;
+   
  }
